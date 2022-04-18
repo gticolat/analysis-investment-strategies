@@ -117,7 +117,7 @@ class ProfitechController:
 
     def delete_historical_data_crypto(self, id_cryptomonnaie):
         self.historical_data_model.delete(id_cryptomonnaie)
-        print("id : " + str(id_cryptomonnaie))
+        self.switch_frame(self.cryptocurrency_list, self.cryptocurrency_list)
 
 
 profitech_c = ProfitechController()

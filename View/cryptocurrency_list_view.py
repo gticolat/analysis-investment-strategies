@@ -17,7 +17,6 @@ class CryptocurrencyListView:
         ttk.Button(self.frame, text="Ajouter une cryptomonnaie", command=lambda: self.controller.switch_frame(self, self.controller.cryptocurrency_add, args=self.controller.get_cryptocurrencies_not_uses())).grid(column=0, row=0)
 
         cryptocurrencies = self.controller.get_cryptocurrencies_uses()
-        print(cryptocurrencies)
         rows = len(cryptocurrencies)
         columns = len(cryptocurrencies[0])
         frame_table = ttk.Frame(self.frame, padding=10)
@@ -35,8 +34,7 @@ class CryptocurrencyListView:
                 entry.grid(column=column, row=row + 2)
                 entry.insert(END, cryptocurrencies[row][column])
                 entry.config(state='readonly')
-            print(cryptocurrencies[row][0])
-            ttk.Button(frame_table, text="Supprimer", command=lambda: self.controller.delete_historical_data_crypto(cryptocurrencies[row][0])).grid(column=4, row=row + 2)
+            ttk.Button(frame_table, text="Supprimer", command=lambda crypto_id=cryptocurrencies[row][0]: self.controller.delete_historical_data_crypto(crypto_id)).grid(column=4, row=row + 2)
 
     def close(self):
         self.frame.destroy()
