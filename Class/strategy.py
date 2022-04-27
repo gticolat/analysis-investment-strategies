@@ -82,7 +82,7 @@ class Strategy:
         Returns :
             (ndarray.datetime) Tableau de date avec un intervalle entre deux dates
         """
-        return np.arange(self.invest_start_date, self.invest_end_date, self.defineTemp()).astype(datetime.datetime)
+        return np.arange(self.invest_start_date, self.invest_end_date, self.define_temp()).astype(datetime.datetime)
 
     def cleaning_historical_data(self, temp_date):
         """Filtrage du tableau des données historique de prix.
@@ -100,7 +100,7 @@ class Strategy:
         historical_date = np.array([], dtype=datetime.datetime)
 
         for temp_date_value in temp_date:
-            mask = (self.historical_data[:, 0] == temp_date_value.strftime("%d-%m-%Y"))
+            mask = (self.historical_data[:, 0] == temp_date_value.strftime("%Y-%m-%d"))
             historical_price = np.append(historical_price, self.historical_data[mask, :][0][1].astype(np.float))
             historical_date = np.append(historical_date, self.historical_data[mask, :][0][0].astype(datetime.datetime))
 
@@ -119,7 +119,7 @@ class Strategy:
             (ndarray.float) Une liste de la valeur du portefeuille en dollar avec la vente. Exemple :
             [11280.43, 14214.13, ...]
         """
-        return sell_values * amount_crypto_buy
+        return np.round(sell_values * amount_crypto_buy, decimals=2)
 
     def get_last_date_buy(self):
         """Récupération de la dernière date d'achat dans un tableau.
@@ -141,7 +141,7 @@ class Strategy:
             Exemple : [[[315.0854], [452.43234]], [[01-01-2017], [02-01-2017]]]
         """
         last_index = len(self.historical_data) - 1
-        last_buy_index = np.where(self.historical_data == last_date_buy.strftime("%d-%m-%Y"))[0][0] + 1
+        last_buy_index = np.where(self.historical_data == last_date_buy.strftime("%Y-%m-%d"))[0][0] + 1
 
         sell_price = np.array(self.historical_data[last_buy_index:last_index, 1:2], dtype=float)
         sell_date = np.array(self.historical_data[last_buy_index:last_index, 0:1], dtype=datetime.datetime)
@@ -157,13 +157,8 @@ class Strategy:
         """
         return [self.price / self.historical_price, np.full(self.historical_price.size, self.price)]
 
-    def buy_va(self, value_path):
+    def buy_va(self):
         """Achat avec la stratégie Value Averaging.
-
-        Args :
-            value_path :
-            (float) Valeur du portefeuille souhaité à chaque étape d'investissement. Par exemple, on veut
-            que tous les mois notre portefeuille contienne une valeur de 1000.00 $.
 
         Returns :
             (list) Liste qui contient les valeurs du portefeuille en cryptomonnaie
@@ -176,8 +171,8 @@ class Strategy:
         crypto_buy_total = np.array([], dtype=float)
 
         for price in self.historical_price:
-            crypto_buy = (((value_path * value_path_x) - (nb_crypto_before_rebalancing * price)) / price)
-            money_invested = ((value_path * value_path_x) - (nb_crypto_before_rebalancing * price))
+            crypto_buy = (((self.price * value_path_x) - (nb_crypto_before_rebalancing * price)) / price)
+            money_invested = round((self.price * value_path_x) - (nb_crypto_before_rebalancing * price), 2)
             nb_crypto_before_rebalancing += crypto_buy
             value_path_x += 1
             money_invested_total = np.append(money_invested_total, money_invested)

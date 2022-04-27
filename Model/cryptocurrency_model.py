@@ -49,6 +49,16 @@ class CryptocurrencyModel:
 
         return id_crypto
 
+    def select_id_from_name(self, name):
+        query = "SELECT id_cryptomonnaie FROM " + self.table + " WHERE name = ?"
+
+        self.cur.execute(query, [name])
+        row = self.cur.fetchone()
+
+        return row[0]
+
+
+
     def insert(self, value):
         query = "INSERT INTO " + self.table + " (id_cryptomonnaie, symbole, name, rank)  VALUES (?, ?, ?, ?)"
 

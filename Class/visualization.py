@@ -1,4 +1,7 @@
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import pandas as pd
 from matplotlib import cm
@@ -54,8 +57,6 @@ class Visualization:
         profit = []
 
         for one_portfolio in portfolios:
-            # date_achat.append(datetime.datetime.strptime(one_portfolio.get_date_buy()[0], "%d-%m-%Y"))
-            # date_vente.append(datetime.datetime.strptime(one_portfolio.get_sell_date()[0], "%d-%m-%Y"))
             date_achat.append(pd.to_datetime(one_portfolio.get_date_buy()[0], format="%d-%m-%Y"))
             date_vente.append(pd.to_datetime(one_portfolio.get_sell_date()[0], format="%d-%m-%Y"))
             profit.append(float(((one_portfolio.get_sell_earn() - one_portfolio.get_money_invested()) / one_portfolio.get_money_invested()) * 100))
@@ -73,7 +74,16 @@ class Visualization:
         plt.show()
         # plt.savefig(filename, dpi=600)
 
+    def histogram(self, montant_achat, bins, frame):
+        f = Figure(figsize=(6, 5), dpi=100)
+        canvas = FigureCanvasTkAgg(f, master=frame)
+        canvas.get_tk_widget().grid(row=0, column=0)
 
+        p = f.gca()
+        p.hist(montant_achat, bins=bins, edgecolor="black", log=True)
+        p.set_xlabel('Montant achat', fontsize=15)
+        p.set_ylabel('Fréquence', fontsize=15)
+        canvas.show()
 
     def portfolio_3d(self, portfolios):
         xAmplitudes = np.random.exponential(10, 10000)  # your data here

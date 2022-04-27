@@ -6,7 +6,7 @@ from Class.historical_data import HistoricalData
 
 # Créer un tableau de tableau : [[date], [nbBTC], [argentInjecte]]
 # Voir si on peut gérer le portefeuille avec une classe
-'''
+
 
 def gen_strategy_result(strategy_name, temp, interval=None):
     # On définit les dates de début et de fin d'investissement
@@ -57,7 +57,7 @@ def gen_strategy_result(strategy_name, temp, interval=None):
 
     return portfolios
 
-'''
+
 crypto_symbole = "ETH"
 
 now = datetime.date.today()
@@ -70,6 +70,8 @@ interval_total = np.array([], dtype=int)
 headers, historical_data = scraper.get_data()
 historical_data = np.array(historical_data)[:, 0:2]
 historical_data = np.flip(historical_data, 0)
+
+print(historical_data)
 '''
 # Date de fin fixe fréquence mois
 portfolios_dca_monthly_no_interval = gen_strategy_result("dca", "monthly")
